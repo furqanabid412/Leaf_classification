@@ -40,8 +40,8 @@ class PLModel(pl.LightningModule):
         pred = torch.argmax(logits,dim=1)
         matched = pred == labels
         accu = matched.sum()
+        self.train_acc += accu.item()
         accu = accu.item() / len(labels)
-        self.train_acc += accu
         self.log('train_loss', loss.item(), on_step=True, on_epoch=False, prog_bar= True)
         self.log('train_accu_curr', accu, on_step=True, on_epoch=False, prog_bar=True)
         return {'loss': loss}
@@ -58,8 +58,8 @@ class PLModel(pl.LightningModule):
         pred = torch.argmax(logits, dim=1)
         matched = pred == labels
         accu = matched.sum()
+        self.val_acc += accu.item()
         accu = accu.item() / len(labels)
-        self.val_acc += accu
         self.log('val_loss', loss, on_step=True, on_epoch=False, prog_bar=True)
         self.log('val_accu_curr', self.val_acc, on_step=True, on_epoch=False, prog_bar=True)
         return {'val_acc': self.val_acc}
@@ -76,9 +76,9 @@ class PLModel(pl.LightningModule):
         pred = torch.argmax(logits, dim=1)
         matched = pred == labels
         accu = matched.sum()
+        self.test_acc += accu.item()
         accu = accu.item() / len(labels)
 
-        self.test_acc += accu
         self.log('test_loss', loss, on_step=True, on_epoch=False, prog_bar=True)
         self.log('test_accu_curr', self.test_acc, on_step=True, on_epoch=False, prog_bar=True)
         return {'test_acc': self.test_acc}

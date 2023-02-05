@@ -42,6 +42,8 @@ class PLDataloader(pl.LightningDataModule):
         lengths = [int(p * len(dataset)) for p in self.proportions]
         lengths[-1] = len(dataset) - sum(lengths[:-1])
         self.train_set, self.val_set, self.test_set = data.random_split(dataset, lengths)
+        print('train-set :',len(self.train_set),'val-set :',len(self.val_set),'test-set :',len(self.test_set))
+
 
     def train_dataloader(self):
         dataloader = DataLoader(self.train_set,batch_size=self.batch_size,
@@ -50,7 +52,7 @@ class PLDataloader(pl.LightningDataModule):
         return dataloader
 
     def val_dataloader(self):
-        dataloader = DataLoader(self.val_set, batch_size=1,
+        dataloader = DataLoader(self.val_set, batch_size=self.batch_size,
                                       shuffle=self.shuffle, num_workers=self.num_workers,
                                       pin_memory=False, drop_last=True)
         return dataloader
