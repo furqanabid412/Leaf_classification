@@ -1,18 +1,6 @@
-import os.path
-import yaml
-import numpy as np
 import torch
 import pytorch_lightning as pl
-import torchmetrics
-import torch.nn.functional as F
 import torch.nn as nn
-from sklearn.metrics import jaccard_score, confusion_matrix
-from datetime import datetime
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-import numpy as np
-import matplotlib.pyplot as plt
-from torchvision.utils import make_grid
 from torchvision.models import mobilenet_v3_small
 
 class PLModel(pl.LightningModule):
@@ -61,7 +49,7 @@ class PLModel(pl.LightningModule):
         self.val_acc += accu.item()
         accu = accu.item() / len(labels)
         self.log('val_loss', loss, on_step=True, on_epoch=False, prog_bar=True)
-        self.log('val_accu_curr', self.val_acc, on_step=True, on_epoch=False, prog_bar=True)
+        self.log('val_accu_curr', accu, on_step=True, on_epoch=False, prog_bar=True)
         return {'val_acc': self.val_acc}
 
     def validation_epoch_end(self, outputs):
@@ -80,7 +68,7 @@ class PLModel(pl.LightningModule):
         accu = accu.item() / len(labels)
 
         self.log('test_loss', loss, on_step=True, on_epoch=False, prog_bar=True)
-        self.log('test_accu_curr', self.test_acc, on_step=True, on_epoch=False, prog_bar=True)
+        self.log('test_accu_curr', accu, on_step=True, on_epoch=False, prog_bar=True)
         return {'test_acc': self.test_acc}
 
     def test_epoch_end(self, test_step_outputs):
